@@ -12,7 +12,7 @@
       <v-layout row wrap align-center justify-center>
         <v-flex xs12 >
           <v-carousel>
-            <v-carousel-item v-for="meetup in meetups" :key="meetup.id" :src="meetup.imageUrl">
+            <v-carousel-item v-for="meetup in meetups" :key="meetup.id" :src="meetup.imageUrl" @click.native="onLoadMeetup(meetup.id)">
               <div class="cartitle">{{ meetup.title }}</div>
             </v-carousel-item>
           </v-carousel>
@@ -37,6 +37,11 @@ export default {
         { imageUrl: 'https://image.shutterstock.com/z/stock-photo-the-eiffel-tower-at-sunrise-in-paris-france-543790033.jpg', id: 'hfhahjjfah', title: 'Meetup in Paris'},
         { imageUrl: 'https://thumbs.dreamstime.com/z/financial-district-city-london-aerial-cityscape-32891765.jpg', id: 'hfhhhhahjhjfah', title: 'Meetup in London'},
       ]
+    }
+  },
+  methods: {
+    onLoadMeetup(id) {
+      this.$router.push('/meetups/' + id)
     }
   }
 }
