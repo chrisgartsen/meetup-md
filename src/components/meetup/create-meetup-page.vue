@@ -32,7 +32,17 @@
             </v-layout>
             <v-layout>
               <v-flex xs12 sm6 offset-sm3>
-                <v-text-field name="description" label="Description" id="description"  multi-line></v-text-field>
+                <v-text-field name="description" label="Description" id="description"  multi-line v-model="description"></v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout row>
+              <v-flex xs12 sm6 offset-sm3>
+                <h4>Choose a date</h4>
+              </v-flex>
+            </v-layout>
+            <v-layout row>
+              <v-flex xs12 sm6 offset-sm3 mb-2>
+                <v-date-picker v-model="date"></v-date-picker>
               </v-flex>
             </v-layout>
             <v-layout row>
@@ -55,15 +65,21 @@
         title: '',
         location: '',
         imageUrl: '',
-        description: ''
+        description: '',
+        date: null
       }
     },
     computed: {
       formIsValid() {
         return this.title !== '' && this.location !== '' && this.imageUrl !== ''
+      },
+      submittableDate() {
+        const date = new Date(this.date)
+        return date
       }
     },
     methods: {
+
       onCreateMeetup() {
         if(!this.formIsValid) {
           return
@@ -73,7 +89,7 @@
           location: this.location,
           imageUrl: this.imageUrl,
           description: this.description,
-          date: new Date()
+          date: this.submittableDate
         }
         this.$store.dispatch("createMeetup", meetupData)
         this.$router.push("/meetups")
