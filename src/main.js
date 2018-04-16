@@ -3,11 +3,18 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import Vuetify from 'vuetify'
 import store from '@/store'
-import 'vuetify/dist/vuetify.min.css'
 
+// Firebase
+import * as firebase from 'firebase'
+
+// Vuetify
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 import colors from 'vuetify/es5/util/colors'
+
+// Helper files
+import '@/filters/date-format'
 
 Vue.use(Vuetify, {
   theme: {
@@ -29,5 +36,14 @@ new Vue({
   router,
   store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  created() {
+    firebase.initializeApp({
+      apiKey: "AIzaSyB5C4BQUNtzN0s09EyBo3h8Fgmu2ZIaHvI",
+      authDomain: "meetup-md.firebaseapp.com",
+      databaseURL: "https://meetup-md.firebaseio.com",
+      projectId: "meetup-md",
+      storageBucket: "meetup-md.appspot.com",
+    })
+  }
 })
