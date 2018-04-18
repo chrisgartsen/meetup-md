@@ -34,7 +34,10 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn type="submit" color="primary" flat>Sign up</v-btn>                   
+              <v-btn type="submit" color="primary" flat :disabled="loading" :loading="loading">
+                Sign up
+                <span slot="loader" class="custom-loader"><v-icon light>cached</v-icon></span>
+              </v-btn>    
             </v-card-actions>
             </form>
           </v-card>
@@ -64,11 +67,14 @@
       },
       error() {
         return this.$store.getters.error
+      },
+      loading() {
+        return this.$store.getters.loading
       }
     },
     methods: {
       onSignup() {
-        this.$store.dispatch('signUserUp', {email: this.email, password: this.password})
+        this.$store.dispatch('signUserUp', {email: this.email, password: this.password} )
       },
       onDismissed() {
         this.$store.dispatch("clearError")
