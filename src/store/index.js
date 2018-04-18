@@ -33,7 +33,9 @@ export default new Vuex.Store({
         description: 'Woooototto'
       },
     ],
-    user: null
+    user: null,
+    loading: false,
+    error: null
   },
   mutations: {
     createMeetup(state, payload) {
@@ -41,7 +43,16 @@ export default new Vuex.Store({
     },
     setUser(state, payload) {
       state.user = payload
-    }
+    },
+    setLoading(state, payload) {
+      state.loading = payload
+    },
+    setError(state, payload) {
+      state.error = payload
+    },
+    clearError(state) {
+      state.error = null
+    },
   },
   actions: {
     createMeetup({commit}, payload) {
@@ -56,6 +67,8 @@ export default new Vuex.Store({
       commit("createMeetup", meetup)
     },
     signUserUp({commit}, payload) {
+      commit("setLoading", true)
+      commit("clearError")
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then((user) => {
           const newUser = {
@@ -66,9 +79,15 @@ export default new Vuex.Store({
         })
         .catch((error) => {
           console.log(error)
+          commit("setError", error)
+        })
+        .finally(() => {
+          commit("setLoading", false)
         })
     },
     signUserIn({commit}, payload) {
+      commit("setLoading", true)
+      commit("clearError")
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then((user) => {
           const newUser = {
@@ -79,7 +98,14 @@ export default new Vuex.Store({
         })
         .catch((error) => {
           console.log(error)
+          commit("setError", error)
         })
+        .finally(() => {
+          commit("setLoading", false)
+        })
+    },
+    clearError({commit}) {
+      commit("clearError")
     }
   },
   getters: {
@@ -98,6 +124,12 @@ export default new Vuex.Store({
     },
     user(state) {
       return state.user
+    },
+    error(state) {
+      return state.error
+    },
+    loading(state) {
+      return state.loading
     }
   }
 })

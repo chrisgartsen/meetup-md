@@ -16,6 +16,10 @@ import colors from 'vuetify/es5/util/colors'
 // Helper files
 import '@/filters/date-format'
 
+import alert from '@/components/shared/alert'
+
+Vue.component('app-alert', alert)
+
 Vue.use(Vuetify, {
   theme: {
     primary: colors.red.darken1,
