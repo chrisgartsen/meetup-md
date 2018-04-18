@@ -48,6 +48,7 @@ new Vue({
       databaseURL: "https://meetup-md.firebaseio.com",
       projectId: "meetup-md",
       storageBucket: "meetup-md.appspot.com",
-    })
+    }),
+    this.$store.dispatch('loadMeetups')
   }
 })

@@ -9,8 +9,13 @@
           <v-btn large router to="/meetup/new" class="info">Organize Meetup</v-btn>
         </v-flex>
       </v-layout>
-      <v-layout row wrap align-center justify-center>
-        <v-flex xs12 >
+      <v-layout row wrap align-center justify-center v-if="loading">
+        <v-flex xs12 class="text-xs-center">
+          <v-progress-circular indeterminate class="primary--text" :width="7" :size="70"></v-progress-circular>
+        </v-flex>
+      </v-layout>
+      <v-layout row wrap align-center justify-center v-if="!loading">
+        <v-flex xs12>
           <v-carousel>
             <v-carousel-item v-for="meetup in meetups" :key="meetup.id" :src="meetup.imageUrl" @click.native="onLoadMeetup(meetup.id)" style="cursor: pointer">
               <div class="cartitle">{{ meetup.title }}</div>
@@ -33,6 +38,9 @@ export default {
   computed: {
     meetups() {
       return this.$store.getters.featuredMeetups
+    },
+    loading() {
+      return this.$store.getters.loading
     }
   },
   methods: {

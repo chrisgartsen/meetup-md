@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as firebase from 'firebase'
+import { O_NONBLOCK } from 'constants';
 
 Vue.use(Vuex)
 
@@ -38,6 +39,9 @@ export default new Vuex.Store({
     error: null
   },
   mutations: {
+    setLoadedMeetups(state, payload) {
+      state.loadedMeetups = payload
+    },
     createMeetup(state, payload) {
       state.loadedMeetups.push(payload)
     },
@@ -55,16 +59,52 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    loadMeetups({commit}) {
+      commit("setLoading", true)
+      firebase.database().ref('meetups').once('value')
+        .then((data) => {
+          const meetups = []
+          const obj = data.val()
+          for(let key in obj) {
+            meetups.push({
+              id: key,
+              title: obj[key].title,
+              description: obj[key].description,
+              imageUrl: obj[key].imageUrl,
+              date: obj[key].date,
+              location: obj[key].location
+            })
+          }
+          commit('setLoadedMeetups', meetups)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+        .finally(() => {
+          commit("setLoading", false)
+        })
+    },
     createMeetup({commit}, payload) {
       const meetup = {
-        id: 'ajajajaj',
         title: payload.title,
         location: payload.location,
         imageUrl: payload.imageUrl,
         description: payload.description,
-        date: payload.date
+        date: payload.date.toISOString()
       }
-      commit("createMeetup", meetup)
+      firebase.database().ref('meetups').push(meetup)
+        .then((data) =>{
+          console.log(data)
+          const key = data.key
+
+          commit("createMeetup", {
+            ...meetup,
+            id: key
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     signUserUp({commit}, payload) {
       commit("setLoading", true)
