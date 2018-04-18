@@ -8,32 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 
   state: {
-    loadedMeetups: [
-      { 
-        imageUrl: 'https://www.tomb-photo.com/wp-content/uploads/2017/06/city-pictures-pexels-free-stock-photos-pertaining-to-free-stock-photos-new-york-city-skyline-1024x768.jpg', 
-        id: 'nykey', 
-        title: 'Meetup in New York',
-        location: 'New York',
-        date: new Date(),
-        description: 'Wooot'
-      },
-      { 
-        imageUrl: 'https://image.shutterstock.com/z/stock-photo-the-eiffel-tower-at-sunrise-in-paris-france-543790033.jpg', 
-        id: 'pariskey', 
-        title: 'Meetup in Paris',
-        location: 'Paris',
-        date: new Date(),
-        description: 'Wooottotto'
-      },
-      { 
-        imageUrl: 'https://thumbs.dreamstime.com/z/financial-district-city-london-aerial-cityscape-32891765.jpg', 
-        id: 'londonkey', 
-        title: 'Meetup in London',
-        location: 'London',
-        date: new Date(),
-        description: 'Woooototto'
-      },
-    ],
+    loadedMeetups: [],
     user: null,
     loading: false,
     error: null
@@ -143,6 +118,16 @@ export default new Vuex.Store({
         .finally(() => {
           commit("setLoading", false)
         })
+    },
+    autoSignin( {commit}, payload) {
+      commit('setUser', {
+        id: payload.uid,
+        registeredMeetups: []
+      })
+    },
+    logout({commit}) {
+      firebase.auth().signOut()
+      commit("setUser", null)
     },
     clearError({commit}) {
       commit("clearError")
